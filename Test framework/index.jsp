@@ -14,6 +14,9 @@
         <input type="submit" value="Valider">
     </form>
     <a href="test.do?nom=Test&&poids=42">Test</a>
+    <p><a href="testJson.do">Json test</a></p>
+    <p><a href="ha.do">Json test2</a></p>
+    <p><a href="hey.do">Model test</a></p>
     <p><a href="login.do">Se Connecter</a></p>
     <p><a href="admin.do">Page admin</a></p>
     

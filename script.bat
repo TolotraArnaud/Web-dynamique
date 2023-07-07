@@ -4,6 +4,7 @@ javac -d . etu1869/framework/*.java
 javac -d . etu1869/framework/servlet/*.java
 javac -d . helper_classes/*.java
 cd ../../
+
 jar cvf Framework.jar  -C Framework/src/ .
 copy "Framework.jar" "Test framework/WEB-INF/lib/"
 
