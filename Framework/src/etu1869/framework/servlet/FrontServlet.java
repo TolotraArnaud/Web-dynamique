@@ -6,11 +6,14 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.MultipartConfig;
 import helper_classes.*;
 import etu1869.framework.*;
+import etu1869.framework.Modelview;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import annotation.Auth;
 import annotation.SessionConfig;
@@ -101,6 +104,7 @@ public class FrontServlet extends HttpServlet {
                     req.getRequestDispatcher(myview.getView()).forward(req,res);
                 }*/
             } catch (Exception e) {
+                out.print("Mipoitra");
                 out.println(e);
             }
         } else {
@@ -173,10 +177,25 @@ public class FrontServlet extends HttpServlet {
         return matching;
     }
 
-    public void setDatas(HttpServletRequest req, Modelview view) {
-        HashMap<String, Object> datas = view.getDatas();
-        for (String key : datas.keySet()) {
-            req.setAttribute(key, datas.get(key));
+    public void setDatas(HttpServletRequest req, Modelview view) throws Exception{
+        System.out.println("setting data ==============");
+        if (view.isJson()) {
+            try {
+                Gson gson = new GsonBuilder().create();
+                System.out.println("is json");
+                String json = gson.toJson(view.getDatas());
+                req.setAttribute("dataJson", json);
+            } catch (Exception e) {
+                System.out.println(e);
+                throw new Exception("Error 3"+e);
+            }
+            
+        } else {
+            System.out.println("data default ===");
+            HashMap<String, Object> datas = view.getDatas();
+            for (String key : datas.keySet()) {
+                req.setAttribute(key, datas.get(key));
+            }
         }
     }
 

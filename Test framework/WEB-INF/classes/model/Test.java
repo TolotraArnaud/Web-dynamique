@@ -1,5 +1,8 @@
 package model;
 
+import annotation.Url;
+import etu1869.framework.Modelview;
+
 public class Test {
     int test;
     String nom;
@@ -8,6 +11,7 @@ public class Test {
         test = 50;
         nom = "azerty";
     }
+
 
     public int getTest() {
         return test;

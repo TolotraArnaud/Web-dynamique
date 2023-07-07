@@ -68,11 +68,20 @@ public class Util {
     public static void setObjectField(Object obj, HttpServletRequest request) throws Exception{
         Field[] allField = obj.getClass().getDeclaredFields();
         String field_name;
-        Object value;
+        Object value = null;
 
         for(Field f : allField) {
             field_name = f.getName();
-            if (f.getType().equals(FileUpload.class)) {
+            if(f.isAnnotationPresent(SessionConfig.class)){
+                HashMap<String, Object> session = new HashMap<>();
+                HttpSession httpSession = request.getSession();
+                ArrayList<String> attribute = Collections.list(httpSession.getAttributeNames());
+                for (String attr : attribute) {
+                    session.put(attr, httpSession.getAttribute(attr));
+                }
+                value = session;
+            } else{
+                if (f.getType().equals(FileUpload.class)) {
                 try {
                     //System.out.println(field_name);
                     Part filePart = request.getPart(field_name);
@@ -84,17 +93,10 @@ public class Util {
                 } catch (Exception e) {
                     value = null;
                 }
-            } else if(f.isAnnotationPresent(SessionConfig.class)){
-                HashMap<String, Object> session = new HashMap<>();
-                HttpSession httpSession = request.getSession();
-                ArrayList<String> attribute = Collections.list(httpSession.getAttributeNames());
-                for (String attr : attribute) {
-                    session.put(attr, httpSession.getAttribute(attr));
+                } else {
+                    value = request.getParameter(field_name);
                 }
-                value = session;
-            } else {
-                value = request.getParameter(field_name);
-            }
+            } 
             if(value != null) {
                 if (value.getClass().equals(FileUpload.class)) {
                     try {
@@ -102,7 +104,7 @@ public class Util {
                                 .getMethod("set"+Util.capitalize(field_name), f.getType())
                                 .invoke(obj, value);
                     } catch (Exception e) {
-                        throw new RuntimeException(e);
+                        throw new RuntimeException("Error 4"+e.getMessage());
                     }
                 } else if (value instanceof HashMap){
                     try {
@@ -110,7 +112,7 @@ public class Util {
                                 .getMethod("set"+Util.capitalize(field_name), f.getType())
                                 .invoke(obj, value);
                     } catch (Exception e) {
-                        throw new RuntimeException(e);
+                        throw new RuntimeException("Error 1 :"+e.getMessage());
                     }
                 } else {
                     try {
@@ -118,7 +120,7 @@ public class Util {
                                 .getMethod("set"+Util.capitalize(field_name), f.getType())
                                 .invoke(obj, Util.castPrimaryType(value.toString(), f.getType()));
                     } catch (ParseException e) {
-                        throw new RuntimeException(e);
+                        throw new RuntimeException("Error 2"+e.getMessage());
                     }
 
                 }
@@ -130,7 +132,6 @@ public class Util {
         Field[] fields = obj.getClass().getDeclaredFields();
         String field_name;
         Object value;
-
         for(Field f : fields) {
             field_name = f.getName();
             if (f.getType().equals(int.class)||f.getType().equals(double.class)||f.getType().equals(float.class)) {

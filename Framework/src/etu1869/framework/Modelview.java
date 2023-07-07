@@ -6,9 +6,16 @@ public class Modelview {
     String view;
     HashMap<String, Object> datas;
     HashMap<String, Object> session;
+    boolean isJson;
 
     public Modelview (String view){
         this.setView(view);
+        this.setJson(false);
+        datas = new HashMap<>();
+        session = new HashMap<>();
+    }
+    public Modelview (){
+        this.setJson(false);
         datas = new HashMap<>();
         session = new HashMap<>();
     }
@@ -23,8 +30,9 @@ public class Modelview {
     }
     public void setView(String view) {
         if (!view.contains(".jsp")) {
-            view += ".jsp";
+            view =view+ ".jsp";
         }
+        System.out.println(view);
         this.view = view;
     }
 
@@ -46,6 +54,14 @@ public class Modelview {
 
     public HashMap<String, Object> getSession() {
         return this.session;
+    }
+
+    public boolean isJson() {
+        return isJson;
+    }
+
+    public void setJson(boolean isJson) {
+        this.isJson = isJson;
     }
 
     

@@ -41,6 +41,7 @@ public class Emp {
         mv.addItem("list", liste);
         return mv;
     }
+    
     @Url(value = "save.do")
     public Modelview save(){
         Modelview mv = new Modelview("result.jsp");
